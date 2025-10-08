@@ -138,6 +138,8 @@ def q2(dfs):
     # - the number of rows
     # - the number of columns
     # - the columns are listed in the correct order
+    # print(dfs)
+  shapes = 
     raise NotImplementedError
 
 """
