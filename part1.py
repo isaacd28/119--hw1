@@ -98,8 +98,10 @@ def load_input():
     # Make sure you return the columns in the new order.
     # TODO
 
-    # When you are done, remove the next line...
-    raise NotImplementedError
+    # Select only the columns in NEW_COLUMNS 
+    df_2019 = df_2019[[c for c in NEW_COLUMNS if c in df_2019.columns]]
+    df_2020 = df_2020[[c for c in NEW_COLUMNS if c in df_2020.columns]]
+    df_2021 = df_2021[[c for c in NEW_COLUMNS if c in df_2021.columns]]
 
     # ...and keep this line to return the dataframes.
     return [df_2019, df_2020, df_2021]
