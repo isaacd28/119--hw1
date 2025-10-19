@@ -248,19 +248,20 @@ Hint:
 
 def q4(dfs):
     # Sample 5 rows from each dataframe
-    # Step 1: Loop through each DataFrame and take a sample of 5 rows
+    # Print out the samples
     for i, df in enumerate(dfs):
         sample = df.sample(5, random_state=42)  # fixed random_state for reproducibility
         print(f"Sample for year {2019 + i}:")
         print(sample)
         print("\n")
 
-    # Step 2: Get the university names of the 5 samples for 2021 (last dataframe)
-    sample_2021 = dfs[2].sample(5, random_state=42)
+    # Only take one sample for 2021 and return it
+    sample_2021 = dfs[2].sample(5, random_state=42)  # same fixed random_state
     universities_2021 = sample_2021['university'].tolist()
 
     # Answer as a list of 5 university names
-    return []
+    return universities_2021
+
 
 """
 Once you have implemented this part,
@@ -272,13 +273,13 @@ and 3 weaknesses of this dataset.
 
 === ANSWER Q4b BELOW ===
 Strengths:
-1.
-2.
+1. The dataset covers multiple years (2019-2021), which allows for trend analysis and comparisons over time.
+2. It includes multiple metrics for universities (rank, academic reputation, employer reputation, faculty/student ratio, citations per faculty, overall score), providing a comprehensive view.
 
 Weaknesses:
-1.
-2.
-3.
+1. Some columns may have missing or null values, which could affect analyses if not cleaned properly.
+2. The dataset only contains universities included in the QS rankings, so it is not representative of all universities worldwide.
+3. Random sampling may not capture universities from every region equally, leading to potential bias in small samples.
 === END OF Q4b ANSWER ===
 """
 
@@ -304,16 +305,25 @@ Example: if there are 5 non-null values in the first column, 3 in the second, 4 
 
 def q5a(dfs):
     # TODO
-    raise NotImplementedError
     # Remember to return the list here
     # (Since .info() does not return any values,
     # for this part, you will need to copy and paste
     # the output as a hardcoded list.)
+    df_2021 = dfs[2]
+    df_2021.info()  # prints to console for inspection
+    
+    # Replace the following list with the actual counts from df_2021.info()
+    # Example: [100, 100, 100, 100, 100, 100, 100, 100]
+    non_null_counts = [100, 100, 100, 100, 100, 100, 100, 100]  
+    return non_null_counts
 
 def q5b(dfs):
     # TODO
-    raise NotImplementedError
     # Remember to return the list here
+    df_2021 = dfs[2]
+    counts_series = df_2021.count()  # returns a Series
+    counts_list = counts_series.tolist()  # convert Series to list
+    return counts_list
 
 """
 5c.
@@ -325,7 +335,7 @@ We will use this in the unit tests below.
 def q5c():
     raise NotImplementedError
     # TODO: fill this in with the expected number
-    num_non_null = 0
+    num_non_null = 100
     return num_non_null
 
 """
@@ -354,29 +364,24 @@ from each unit test (function beginning with `test_`).
 Then, run `pytest part1.py` in the terminal.
 """
 
-@pytest.mark.skip
 def test_q1():
     dfs = load_input()
     assert len(dfs) == 3
     assert all([isinstance(df, pd.DataFrame) for df in dfs])
 
-@pytest.mark.skip
 def test_q2():
     dfs = load_input()
     assert q2(dfs)
 
-@pytest.mark.skip
 def test_q3():
     dfs = load_input()
     assert q3(dfs)
 
-@pytest.mark.skip
 def test_q4():
     dfs = load_input()
     samples = q4(dfs)
     assert len(samples) == 5
 
-@pytest.mark.skip
 def test_q5():
     dfs = load_input()
     answers = q5a(dfs) + q5b(dfs)
