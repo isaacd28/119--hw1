@@ -141,8 +141,29 @@ def q2(dfs):
     # - the number of columns
     # - the columns are listed in the correct order
     # print(dfs)
-  shapes = 
-    raise NotImplementedError
+  
+    # Step 1: Make sure we actually got a list of 3 DataFrames
+    if not dfs or len(dfs) != 3:
+        # If the list is empty or not exactly 3 dataframes, fail validation
+        return False
+
+    # Step 2: Use the first DataFrame as reference
+    ref_df = dfs[0]                 # Reference DataFrame (2019)
+    ref_shape = ref_df.shape        # Tuple: (num_rows, num_columns)
+    ref_columns = list(ref_df.columns)  # Column names in order
+
+    # Step 3: Compare all other DataFrames to the reference
+    for df in dfs[1:]:  # Loop over 2020 and 2021
+        # Check shape
+        if df.shape != ref_shape:
+            return False   # Shapes don't match → fail
+
+        # Check columns (name and order)
+        if list(df.columns) != ref_columns:
+            return False   # Columns don't match → fail
+
+    # Step 4: If we reach here, all checks passed
+    return True
 
 """
 ===== Interlude: Checking your output so far =====
