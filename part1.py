@@ -395,7 +395,7 @@ FAILED part1.py::test_q5 - NotImplementedError
 is wrong or because the test is wrong?
 
 === ANSWER Q6b BELOW ===
-They were implemented wrong.
+They look to be implemented right. I already implemented q5 but it still shows the error.
 === END OF Q6b ANSWER ===
 
 IMPORTANT: for any failing tests, if you think you have
@@ -413,7 +413,7 @@ Please include expected failures (@pytest.mark.xfail).
 
 def q6c():
     # TODO
-    raise NotImplementedError
+    return 2
 
 """
 ===== End of interlude =====
@@ -431,8 +431,14 @@ As your answer to this part, return the number of columns in each dataframe afte
 
 def q7(dfs):
     # TODO
-    raise NotImplementedError
     # Remember to return the list here
+    # Add 'year' column to each dataframe
+    years = [2019, 2020, 2021]
+    col_counts = []
+    for df, year in zip(dfs, years):
+        df['year'] = year
+        col_counts.append(df.shape[1])  # number of columns after addition
+    return col_counts
 
 """
 8a.
@@ -444,8 +450,11 @@ As your answer, return the count for "USA" in 2021.
 def q8a(dfs):
     # Enter Code here
     # TODO
-    raise NotImplementedError
     # Remember to return the count here
+    df_2021 = dfs[2]
+    region_counts = df_2021['region'].value_counts()
+    # Return the count for USA
+    return int(region_counts.get('USA', 0))
 
 """
 8b.
