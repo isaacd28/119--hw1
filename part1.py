@@ -314,8 +314,7 @@ def q5b(dfs):
     # TODO
     # Remember to return the list here
     df_2021 = dfs[2]
-    counts_series = df_2021.count()  # returns a Series
-    counts_list = counts_series.tolist()  # convert Series to list
+    counts_list = df_2021.count().tolist()
     return counts_list
 
 """
@@ -327,7 +326,7 @@ We will use this in the unit tests below.
 
 def q5c():
     # TODO: fill this in with the expected number
-    return [100, 100, 100, 100, 100, 100, 100, 100]
+    return 100
 
 
 """
