@@ -333,7 +333,6 @@ We will use this in the unit tests below.
 """
 
 def q5c():
-    raise NotImplementedError
     # TODO: fill this in with the expected number
     num_non_null = 100
     return num_non_null
