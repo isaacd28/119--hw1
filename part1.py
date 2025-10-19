@@ -205,12 +205,17 @@ def q3(dfs):
     # Return:
     # - True if they are the same, and False otherwise.
 
-    # Get the set of universities for each dataframe
-    set_2019 = set(name.strip().lower() for name in dfs[0]['university'])
-    set_2020 = set(name.strip().lower() for name in dfs[1]['university'])
-    set_2021 = set(name.strip().lower() for name in dfs[2]['university'])
 
-    # Return True only if all sets are equal
+    def normalize(name):
+    # Remove whitespace, lowercase, remove non-breaking spaces
+    return str(name).strip().lower().replace('\xa0', '')
+
+    # Build sets of normalized university names for each year
+    set_2019 = set(normalize(name) for name in dfs[0]['university'])
+    set_2020 = set(normalize(name) for name in dfs[1]['university'])
+    set_2021 = set(normalize(name) for name in dfs[2]['university'])
+
+    # Return True only if all sets are exactly equal
     return set_2019 == set_2020 == set_2021
 
 
