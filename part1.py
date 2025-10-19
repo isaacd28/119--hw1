@@ -89,8 +89,8 @@ def load_input():
 
     # Standardizing the column names
     df_2019.columns = df_2019.columns.str.lower()
-    df_2020.columns = df_2019.columns.str.lower()
-    df_2021.columns = df_2019.columns.str.lower()
+    df_2020.columns = df_2020.columns.str.lower()
+    df_2021.columns = df_2021.columns.str.lower()
 
     # Restructuring the column indexes
     # Fill out this part. You can use column access to get only the
@@ -392,14 +392,15 @@ def test_q5():
 6a. Are there any tests which fail?
 
 === ANSWER Q6a BELOW ===
-
+FAILED part1.py::test_q3 - assert False
+FAILED part1.py::test_q5 - NotImplementedError
 === END OF Q6a ANSWER ===
 
 6b. For each test that fails, is it because your code
 is wrong or because the test is wrong?
 
 === ANSWER Q6b BELOW ===
-
+They were implemented wrong.
 === END OF Q6b ANSWER ===
 
 IMPORTANT: for any failing tests, if you think you have
