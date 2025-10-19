@@ -204,7 +204,16 @@ def q3(dfs):
     # - that the set of university names in each year is the same
     # Return:
     # - True if they are the same, and False otherwise.
-    raise NotImplementedError
+     # Step 1: Get the set of university names for each dataframe
+    set_2019 = set(dfs[0]['university'])
+    set_2020 = set(dfs[1]['university'])
+    set_2021 = set(dfs[2]['university'])
+
+    # Step 2: Compare all sets
+    if set_2019 == set_2020 == set_2021:
+        return True
+    else:
+        return False
 
 """
 3b (commentary).
@@ -212,7 +221,7 @@ Did the checks pass or fail?
 Comment below and explain why.
 
 === ANSWER Q3b BELOW ===
-
+The checks passed because the datasets for 2019, 2020, and 2021 all contain the same set of universities, even if the rankings or other data differ.
 === END OF Q3b ANSWER ===
 """
 
@@ -239,8 +248,16 @@ Hint:
 
 def q4(dfs):
     # Sample 5 rows from each dataframe
-    # Print out the samples
-    raise NotImplementedError
+    # Step 1: Loop through each DataFrame and take a sample of 5 rows
+    for i, df in enumerate(dfs):
+        sample = df.sample(5, random_state=42)  # fixed random_state for reproducibility
+        print(f"Sample for year {2019 + i}:")
+        print(sample)
+        print("\n")
+
+    # Step 2: Get the university names of the 5 samples for 2021 (last dataframe)
+    sample_2021 = dfs[2].sample(5, random_state=42)
+    universities_2021 = sample_2021['university'].tolist()
 
     # Answer as a list of 5 university names
     return []
