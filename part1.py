@@ -206,9 +206,9 @@ def q3(dfs):
     # - True if they are the same, and False otherwise.
 
     # Get the set of universities for each dataframe
-    set_2019 = set(dfs[0]['university'])
-    set_2020 = set(dfs[1]['university'])
-    set_2021 = set(dfs[2]['university'])
+    set_2019 = set(name.strip().lower() for name in dfs[0]['university'])
+    set_2020 = set(name.strip().lower() for name in dfs[1]['university'])
+    set_2021 = set(name.strip().lower() for name in dfs[2]['university'])
 
     # Return True only if all sets are equal
     return set_2019 == set_2020 == set_2021
