@@ -208,7 +208,7 @@ def q3(dfs):
 
     def normalize(name):
     # Remove whitespace, lowercase, remove non-breaking spaces
-    return str(name).strip().lower().replace('\xa0', '')
+      return str(name).strip().lower().replace('\xa0', '')
 
     # Build sets of normalized university names for each year
     set_2019 = set(normalize(name) for name in dfs[0]['university'])
