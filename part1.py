@@ -204,16 +204,15 @@ def q3(dfs):
     # - that the set of university names in each year is the same
     # Return:
     # - True if they are the same, and False otherwise.
-     # Step 1: Get the set of university names for each dataframe
+
+    # Get the set of universities for each dataframe
     set_2019 = set(dfs[0]['university'])
     set_2020 = set(dfs[1]['university'])
     set_2021 = set(dfs[2]['university'])
 
-    # Step 2: Compare all sets
-    if set_2019 == set_2020 == set_2021:
-        return True
-    else:
-        return False
+    # Return True only if all sets are equal
+    return set_2019 == set_2020 == set_2021
+
 
 """
 3b (commentary).
