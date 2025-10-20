@@ -940,28 +940,42 @@ Return the top 10 university names as a list from the falsified data.
 """
 
 def q21():
-    import shutil
+  # Load the falsified CSV
+    try:
+        df = pd.read_csv("data/2021_falsified.csv", encoding='latin1')
+    except FileNotFoundError:
+        print("Error: '2021_falsified.csv' file not found in 'data/' folder.")
+        return None
+    except Exception as e:
+        print("Error reading CSV:", e)
+        return None
 
-    # Copy original CSV to a falsified CSV
-    shutil.copy('data/2021.csv', 'data/2021_falsified.csv')
+    # Normalize column names (strip spaces and lowercase)
+    df.columns = df.columns.str.strip().str.lower()
 
-    # Load the falsified CSV
-    df = pd.read_csv("data/2021_falsified.csv", encoding='latin1')
-    df.columns = df.columns.str.strip()
+    # Remove rows with missing university names
+    if 'university' not in df.columns:
+        print("Error: 'university' column not found in CSV.")
+        return None
     df = df[df['university'].notna()]
 
-    # Boost UC Berkeley
+    # Compute a cheat score
+    if all(col in df.columns for col in ['overall score', 'academic reputation', 'employer reputation']):
+        df['cheat_score'] = (
+            df['overall score'] * 0.5 +
+            df['academic reputation'] * 0.3 +
+            df['employer reputation'] * 0.2
+        )
+    else:
+        df['cheat_score'] = float('nan')
+
+    # Boost UC Berkeley to the top
     mask = df['university'].str.strip().str.lower() == 'uc berkeley'
-    if mask.any():
-        # Add a large boost to overall score
-        df.loc[mask, 'overall score'] = df['overall score'].max() + 1
+    df.loc[mask, 'cheat_score'] += 50
 
-    # Save the falsified CSV
-    df.to_csv('data/2021_falsified.csv', index=False, encoding='latin1')
-
-    # Return top 10 universities by overall score
-    top10_universities = df.sort_values('overall score', ascending=False)['university'].head(10).tolist()
-    return top10_universities
+    # Return top 10 universities by cheat_score
+    top10 = df.sort_values('cheat_score', ascending=False).head(10)
+    return top10['university'].tolist()
   
 """
 22. Exploring data manipulation and falsification, continued
