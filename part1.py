@@ -902,16 +902,33 @@ def q20a(dfs):
     # For your answer, return the score for Berkeley in the new column.
     # ensure numeric overall score
     df = dfs[2].copy()
-    # simple cheat score:
-    df['cheat_score'] = df['overall score'] + 100  
-    # make Berkeley first
-    return float(df.loc[df['university'] == 'UC Berkeley', 'cheat_score'].iloc[0])
+    # Start cheat_score as the same as overall score
+    df['cheat_score'] = df['overall score'].copy()
+    
+    # Find the exact name of UC Berkeley in the dataset
+    # (likely "University of California, Berkeley")
+    uc_berkeley_name = 'University of California, Berkeley'
+    
+    # Boost UC Berkeley's score significantly
+    df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'] += 1000
+    
+    # Return UC Berkeley's cheat_score
+    berkeley_score = df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'].iloc[0]
+    return float(berkeley_score)
 
 def q20b(dfs):
     # For your answer, return the top 10 university names as a list.
     df = dfs[2].copy()
-    df['cheat_score'] = df['overall score'] + 100
-    return list(df.sort_values('cheat_score', ascending=False).head(10)['university'])
+    # Add the cheat_score column as in q20a
+    df['cheat_score'] = df['overall score'].copy()
+    uc_berkeley_name = 'University of California, Berkeley'
+    df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'] += 1000
+    
+    # Sort by cheat_score descending
+    df_sorted = df.sort_values('cheat_score', ascending=False)
+    
+    # Return the top 10 university names as a list
+    return df_sorted['university'].iloc[:10].tolist()
   
 """
 21. Exploring data manipulation and falsification, continued
