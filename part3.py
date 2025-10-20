@@ -289,10 +289,11 @@ with:
 def pipeline_shell():
     #Count the number of rows in population.csv using shell commands.
     #Skip header line and count remaining lines
-    cmd = "tail -n +2 population.csv | wc -l"
+    cmd = "(cat data/population.csv; echo) | tail -n +2 | wc -l"
     output = os.popen(cmd).read().strip()
     # Return resulting integer
     return int(output)
+
 
 def pipeline_pandas():
     #Count the number of rows in population.csv using Pandas.
