@@ -289,7 +289,7 @@ def q4a():
     h = LatencyHelper()
     # Add the single pipeline three times.
     def single_item_pipeline():
-    add_list(LIST_SINGLE_ITEM)
+        add_list(LIST_SINGLE_ITEM)
     h.add_pipeline("copy1", single_item_pipeline)
     h.add_pipeline("copy2", single_item_pipeline)
     h.add_pipeline("copy3", single_item_pipeline)
