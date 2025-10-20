@@ -345,13 +345,14 @@ def q7():
     shell_helper = part2.ThroughputHelper()
     pandas_helper = part2.ThroughputHelper()
 
-    # Add the pipelines
-    shell_helper.add_pipeline("Shell", len(part2.load_input_large()), pipeline_shell)
-    pandas_helper.add_pipeline("Pandas", len(part2.load_input_large()), pipeline_pandas)
+    # Add pipelines directly
+    shell_helper.add_pipeline("Shell", pipeline_shell)
+    pandas_helper.add_pipeline("Pandas", pipeline_pandas)
 
     # Measure throughputs
     shell_tp = shell_helper.compare_throughput()[0]
     pandas_tp = pandas_helper.compare_throughput()[0]
+
 
     # Generate bar plot
     methods = ["Shell", "Pandas"]
@@ -445,12 +446,7 @@ def log_answer(name, func, *args):
             f.write(f'{name},Not Implemented\n')
         global UNFINISHED
         UNFINISHED += 1
-    except Exception as e:
-        print(f"Error running {name}: {e}")
-        with open(ANSWER_FILE, 'a') as f:
-            f.write(f'{name},Error: {e}\n')
-        global UNFINISHED
-        UNFINISHED += 1
+
 
 
 def PART_3_PIPELINE():
