@@ -213,8 +213,9 @@ def q3(dfs):
             return False
 
     return True
-  
-3b (commentary).
+
+"""
+3b (commentary)
 Did the checks pass or fail?
 Comment below and explain why.
 
