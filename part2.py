@@ -409,16 +409,15 @@ def load_input(filename):
     # **Clean the data here**
     df = pd.read_csv(filename)
 
-    # Remove rows that are for continents or world data
-    # Continents and world have "OWID_" codes
-    df = df[~df["iso_code"].str.startswith("OWID_")]
-
+     remove_entities = ["World", "Asia", "Europe", "Africa", "Oceania", 
+                       "North America", "South America"]
+    df = df[~df["Entity"].isin(remove_entities)]
     return df
 
 def population_pipeline(df):
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
-    grouped = df.groupby("location").agg(
+    grouped = df.groupby("Entity").agg(
         min_year=("year", "min"),
         max_year=("year", "max"),
         min_pop=("population", "min"),
