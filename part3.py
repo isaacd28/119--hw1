@@ -335,11 +335,12 @@ def q7():
     # [throughput for shell, throughput for pandas]
     # (in rows per second)
     # Measure throughput using ThroughputHelper
-    shell_helper = part2.ThroughputHelper(pipeline_shell)
-    pandas_helper = part2.ThroughputHelper(pipeline_pandas)
+    
+    shell_helper = part2.ThroughputHelper()
+    pandas_helper = part2.ThroughputHelper()
 
-    shell_tp = shell_helper.throughput
-    pandas_tp = pandas_helper.throughput
+    shell_tp = shell_helper.throughput(pipeline_shell)
+    pandas_tp = pandas_helper.throughput(pipeline_pandas)
 
     # generate a simple bar plot and save
     import matplotlib.pyplot as plt
@@ -371,11 +372,11 @@ def q8():
     # [latency for shell, latency for pandas]
     # (in milliseconds)
     # Measure latency using LatencyHelper
-    shell_helper = part2.LatencyHelper(pipeline_shell)
-    pandas_helper = part2.LatencyHelper(pipeline_pandas)
+    shell_helper = part2.LatencyHelper()
+    pandas_helper = part2.LatencyHelper()
 
-    shell_lat = shell_helper.latency * 1000  # convert seconds to milliseconds
-    pandas_lat = pandas_helper.latency * 1000
+    shell_lat = shell_helper.latency(pipeline_shell) * 1000
+    pandas_lat = pandas_helper.latency(pipeline_pandas) * 1000
 
     # Generate bar plot and save
     import matplotlib.pyplot as plt
