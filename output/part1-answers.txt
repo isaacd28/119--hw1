@@ -1,6 +1,6 @@
 q1,3
 q2,True
-q3a,True
+q3a,False
 q4,['The University of Auckland', 'Zhejiang University', 'Osaka University', 'The Chinese University of Hong Kong (CUHK)', 'University of California, San Diego (UCSD)']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
@@ -27,3 +27,4 @@ q18,output/part1-18.png
 q20a,0
 q20b,['Massachusetts Institute of Technology (MIT)', 'ETH Zurich - Swiss Federal Institute of Technology', 'California Institute of Technology (Caltech)', 'University of Oxford', 'EPFL', 'Stanford University', 'Harvard University', 'UCL', 'University of Cambridge', 'Princeton University']
 q21,['Massachusetts Institute of Technology (MIT)', 'ETH Zurich - Swiss Federal Institute of Technology', 'California Institute of Technology (Caltech)', 'University of Oxford', 'EPFL', 'Stanford University', 'Harvard University', 'UCL', 'University of Cambridge', 'Princeton University']
+PART 1,0
