@@ -786,7 +786,7 @@ def q17a(top_10):
 What do you observe from the plot above? Which university has remained consistent in their scores? Which have increased/decreased over the years?
 
 === ANSWER Q17b BELOW ===
-
+Consistent universities: Some universities, like MIT or Stanford, have nearly flat lines, indicating their scores remained consistent across 2019–2021.
 === END OF Q17b ANSWER ===
 """
 
