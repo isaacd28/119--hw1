@@ -289,16 +289,19 @@ with:
 def pipeline_shell():
     #Count the number of rows in population.csv using shell commands.
     #Skip header line and count remaining lines
-    cmd = "(cat data/population.csv; echo) | tail -n +2 | wc -l"
-    output = os.popen(cmd).read().strip()
-    # Return resulting integer
-    return int(output)
+    cmd = "cat data/population.csv | tail -n +2 | wc -l"
+    output = os.popen(cmd).read()
+    row_count = int(output.strip())
+    return row_count
+
+  
 
 
 def pipeline_pandas():
-    #Count the number of rows in population.csv using Pandas.
-    df = pd.read_csv("data/population.csv", header=0)  # skip header
-    return df.shape[0]
+    #Count the number of rows in data/population.csv using Pandas.
+    df = pd.read_csv("data/population.csv")
+    row_count = len(df)
+    return row_count
 
 
 def q6():
@@ -307,11 +310,13 @@ def q6():
     """
     Check that both methods return the same integer and return one of them.
     """
-    shell_count = pipeline_shell()
-    pandas_count = pipeline_pandas()
+    count_shell = pipeline_shell()
+    count_pandas = pipeline_pandas()
     
-    assert shell_count == pandas_count, "Shell and Pandas counts do not match"
-    return shell_count
+    if count_shell != count_pandas:
+        raise ValueError("Shell and pandas do not match")
+    
+    return count_shell
     
 """
 Let's do a performance comparison between the two methods.
