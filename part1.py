@@ -199,19 +199,27 @@ remember to check the output in part1-answers.txt.
 (True if the checks pass, and False otherwise)
 """
 
+def clean_names(df):
+    """
+    Standardize the 'university' column: lowercase and strip spaces.
+    """
+    df = df.copy()
+    df['university'] = df['university'].str.strip().str.lower()
+    return df
+
 def q3(dfs):
-    # Helper function to clean university names: strip whitespace and lowercase
-    def normalize(name):
-        # Lowercase, strip whitespace, remove punctuation
-        name = name.strip().lower()
-        name = re.sub(r'[^a-z0-9 ]', '', name)
-        return name
+    """
+    Check that the set of university names is the same across all years.
+    """
+    df2019 = clean_names(dfs[0])
+    df2020 = clean_names(dfs[1])
+    df2021 = clean_names(dfs[2])
 
-    # Create sets of normalized names for each year
-    sets = [set(df['university'].map(normalize)) for df in dfs]
+    set_2019 = set(df2019['university'])
+    set_2020 = set(df2020['university'])
+    set_2021 = set(df2021['university'])
 
-    # Return True if all sets are equal
-    return sets[0] == sets[1] == sets[2]
+    return set_2019 == set_2020 == set_2021
 
 """
 3b (commentary)
