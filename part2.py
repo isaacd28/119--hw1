@@ -57,7 +57,12 @@ class ThroughputHelper:
         self.throughputs = None
 
     def add_pipeline(self, name, size, func):
-        raise NotImplementedError
+        """
+        Add a pipeline to the helper.
+        """
+        self.names.append(name)
+        self.sizes.append(size)
+        self.pipelines.append(func)
 
     def compare_throughput(self):
         # Measure the throughput of all pipelines
@@ -65,7 +70,26 @@ class ThroughputHelper:
         # Make sure to use the NUM_RUNS variable.
         # Also, return the resulting list of throughputs,
         # in **number of items per second.**
-        raise NotImplementedError
+        """
+        Run each pipeline NUM_RUNS times and calculate throughput
+        in items per second. Store result in self.throughputs and return it.
+        """
+        import time
+        self.throughputs = []
+
+        for i, func in enumerate(self.pipelines):
+            size = self.sizes[i]
+            total_time = 0.0
+            for _ in range(NUM_RUNS):
+                start = time.time()
+                func()
+                end = time.time()
+                total_time += (end - start)
+            avg_time = total_time / NUM_RUNS
+            # Throughput: items per second
+            tp = size / avg_time
+            self.throughputs.append(tp)
+        return self.throughputs
 
     def generate_plot(self, filename):
         # Generate a plot for throughput using matplotlib.
@@ -73,7 +97,14 @@ class ThroughputHelper:
         # the most sense.
         # Make sure you include a legend.
         # Save the result in the filename provided.
-        raise NotImplementedError
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(8,5))
+        plt.bar(self.names, self.throughputs, color='blue')
+        plt.ylabel("Throughput (items/sec)")
+        plt.xlabel("Pipeline")
+        plt.title("Pipeline Throughput Comparison")
+        plt.savefig(filename)
+        plt.close()
 
 """
 As your answer to this part,
@@ -85,7 +116,7 @@ matplotlib.
 
 def q1():
     # Return plot method (as a string) from matplotlib
-    raise NotImplementedError
+    return "boxplot"
 
 """
 2. A simple test case
@@ -104,7 +135,10 @@ LIST_LARGE = [10] * 100_000_000
 def add_list(l):
     # TODO
     # Please use a for loop (not a built-in)
-    raise NotImplementedError
+    total = 0
+    for x in l:
+        total += x
+    return total
 
 def q2a():
     # Create a ThroughputHelper object
@@ -112,12 +146,40 @@ def q2a():
     # Add the 3 pipelines.
     # (You will need to create a pipeline for each one.)
     # Pipeline names: small, medium, large
-    raise NotImplementedError
     # Generate a plot.
     # Save the plot as 'output/part2-q2a.png'.
     # TODO
     # Finally, return the throughputs as a list.
-    # TODO
+    import os
+    import matplotlib.pyplot as plt
+    os.makedirs("output", exist_ok=True)
+
+    # Create helper
+    h = ThroughputHelper()
+
+    # Define three pipelines as functions
+    def pipeline_small():
+        add_list(LIST_SMALL)
+
+    def pipeline_medium():
+        add_list(LIST_MEDIUM)
+
+    def pipeline_large():
+        add_list(LIST_LARGE)
+
+    # Add pipelines to helper
+    h.add_pipeline("small", len(LIST_SMALL), pipeline_small)
+    h.add_pipeline("medium", len(LIST_MEDIUM), pipeline_medium)
+    h.add_pipeline("large", len(LIST_LARGE), pipeline_large)
+
+    # Measure throughputs
+    throughputs = h.compare_throughput()
+
+    # Generate plot
+    h.generate_plot("output/part2-q2a.png")
+
+    return throughputs
+
 
 """
 2b.
