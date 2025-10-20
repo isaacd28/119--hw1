@@ -20,13 +20,15 @@ os.makedirs("data", exist_ok=True)
 full_df = pd.read_csv("data/population.csv")
 
 # Small dataset: first 600 rows + header
-full_df.head(600).to_csv("data/population-small.csv", index=False)
+df.iloc[:600].to_csv("data/population-small.csv", index=False)
+
 
 # Medium dataset: first 6000 rows + header
-full_df.head(6000).to_csv("data/population-medium.csv", index=False)
+df.iloc[:6000].to_csv("data/population-medium.csv", index=False)
 
 # Single-row dataset: just the first row + header
-full_df.head(1).to_csv("data/population-single-row.csv", index=False)
+df.iloc[:1].to_csv("data/population-single-row.csv", index=False)
+
 
 """
 === Questions 1-5: Throughput and Latency Helpers ===
