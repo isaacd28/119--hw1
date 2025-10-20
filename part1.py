@@ -364,7 +364,6 @@ def test_q2():
     dfs = load_input()
     assert q2(dfs)
 
-@pytest.mark.xfail
 def test_q3():
     dfs = load_input()
     assert q3(dfs)
@@ -374,7 +373,6 @@ def test_q4():
     samples = q4(dfs)
     assert len(samples) == 5
 
-@pytest.mark.xfail
 def test_q5():
     dfs = load_input()
     answers = q5a(dfs) + q5b(dfs)
@@ -461,6 +459,8 @@ def q8a(dfs):
 Do you notice some trend? Comment on what you observe and why might that be consistent throughout the years.
 
 === ANSWER Q8b BELOW ===
+The USA consistently has a high number of universities in the Top 100. This trend is likely due to 
+things like strong academic and research infrastructure, high funding, and global reputation.
 
 === END OF Q8b ANSWER ===
 """
@@ -479,8 +479,14 @@ The list should contain 5 elements.
 def q9(dfs):
     # Enter code here
     # TODO
-    raise NotImplementedError
     # Return the list here
+    # Use the 2021 dataframe
+    df_2021 = dfs[2]
+    # Select only the columns we need
+    cols = ['academic reputation', 'employer reputation', 'faculty student',
+            'citations per faculty', 'overall score']
+    # Calculate the mean for each column and convert to list
+    return df_2021[cols].mean().tolist()
 
 """
 10.
@@ -496,7 +502,16 @@ def q10_helper(dfs):
     # Enter code here
     # TODO
     # Placeholder for the avg_2021 dataframe
-    avg_2021 = pd.DataFrame()
+    # Get the 2021 dataframe
+    df_2021 = dfs[2]
+
+    # Exclude 'rank' and 'year' columns
+    cols_to_use = [c for c in df_2021.columns if c not in ['rank', 'year']]
+    df_subset = df_2021[cols_to_use]
+
+    # Group by 'region' and compute the mean for all attributes
+    avg_2021 = df_subset.groupby('region').mean().reset_index()
+
     return avg_2021
 
 def q10(avg_2021):
@@ -508,8 +523,9 @@ def q10(avg_2021):
     (That is, return the integer 5)
     """
     # Enter code here
-    raise NotImplementedError
-    # Return 5
+    print(avg_2021.head())
+    # Return the number of rows printed
+    return 5
 
 """
 ===== Questions 11-14: Exploring the avg_2021 dataframe =====
@@ -521,7 +537,10 @@ As your answer to this part, return the first row of the sorted dataframe.
 """
 
 def q11(avg_2021):
-    raise NotImplementedError
+    # Sort by 'overall score' descending
+    sorted_df = avg_2021.sort_values(by='overall score', ascending=False)
+    # Return the first row as a Series or DataFrame (Series is simpler)
+    return sorted_df.iloc[0]
 
 """
 12a.
