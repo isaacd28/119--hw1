@@ -616,7 +616,8 @@ Comment on why the country above is at the top of the list.
 (Note: This is an open-ended question.)
 
 === ANSWER Q12b BELOW ===
-
+Singarpore was the top country in the list. Singapore tops the ranking because its universities have consistently high scores across 
+academic reputation, employer reputation, faculty-student ratio, citations per faculty, and overall score. 
 === END OF Q12b ANSWER ===
 """
 
@@ -635,9 +636,18 @@ import matplotlib.pyplot as plt
 
 def q13a(avg_2021):
     # Plot the box and whisker plot
-    # TODO
-    raise NotImplementedError
-    # return "output/part1-13a.png"
+    attributes = ['academic reputation', 'employer reputation', 'faculty student', 
+                  'citations per faculty', 'overall score']
+    
+    plt.figure(figsize=(10,6))
+    avg_2021[attributes].boxplot()
+    plt.title('Boxplot of University Ranking Attributes by Region (2021)')
+    plt.ylabel('Score')
+    
+    # Save the plot
+    plt.savefig('output/part1-13a.png')
+    plt.close()
+    return 'output/part1-13a.png'
 
 """
 b. Do you observe any anomalies in the box and whisker
@@ -660,9 +670,20 @@ As the answer to this part, return the name of the plot you saved.
 
 def q14a(avg_2021):
     # Enter code here
-    # TODO
-    raise NotImplementedError
-    # return "output/part1-14a.png"
+    plt.figure(figsize=(8,6))
+    plt.scatter(avg_2021['academic reputation'], avg_2021['employer reputation'])
+    plt.xlabel('Academic Reputation')
+    plt.ylabel('Employer Reputation')
+    plt.title('Academic vs Employer Reputation by Region (2021)')
+    
+    # Annotate points with region names
+    for i, row in avg_2021.iterrows():
+        plt.text(row['academic reputation'], row['employer reputation'], row['region'], fontsize=8)
+    
+    # Save the plot
+    plt.savefig('output/part1-14a.png')
+    plt.close()
+    return 'output/part1-14a.png'
 
 """
 Do you observe any general trend?
