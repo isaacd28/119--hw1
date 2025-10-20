@@ -336,14 +336,24 @@ def q7():
     # (in rows per second)
     # Measure throughput using ThroughputHelper
     
+    # Throughput: rows per second
+    import os
+    import matplotlib.pyplot as plt
+    os.makedirs("output", exist_ok=True)
+
+    # Create helpers
     shell_helper = part2.ThroughputHelper()
     pandas_helper = part2.ThroughputHelper()
 
-    shell_tp = shell_helper.throughputs(pipeline_shell)
-    pandas_tp = pandas_helper.throughputs(pipeline_pandas)
+    # Add pipelines
+    shell_helper.add_pipeline("Shell", len(part2.load_input_large()), pipeline_shell)
+    pandas_helper.add_pipeline("Pandas", len(part2.load_input_large()), pipeline_pandas)
 
+    # Measure throughputs
+    shell_tp = shell_helper.compare_throughput()[0]
+    pandas_tp = pandas_helper.compare_throughput()[0]
+    
     # generate a simple bar plot and save
-    import matplotlib.pyplot as plt
     methods = ["Shell", "Pandas"]
     values = [shell_tp, pandas_tp]
     plt.figure(figsize=(6,4))
@@ -372,14 +382,23 @@ def q8():
     # [latency for shell, latency for pandas]
     # (in milliseconds)
     # Measure latency using LatencyHelper
+    import os
+    import matplotlib.pyplot as plt
+    os.makedirs("output", exist_ok=True)
+
+    # Create helpers
     shell_helper = part2.LatencyHelper()
     pandas_helper = part2.LatencyHelper()
 
-    shell_lat = shell_helper.latency(pipeline_shell) * 1000
-    pandas_lat = pandas_helper.latency(pipeline_pandas) * 1000
+    # Add pipelines 
+    shell_helper.add_pipeline("Shell", pipeline_shell)
+    pandas_helper.add_pipeline("Pandas", pipeline_pandas)
+
+    # Measure latencies
+    shell_lat = shell_helper.compare_latency()[0]
+    pandas_lat = pandas_helper.compare_latency()[0]
 
     # Generate bar plot and save
-    import matplotlib.pyplot as plt
     methods = ["Shell", "Pandas"]
     values = [shell_lat, pandas_lat]
     plt.figure(figsize=(6,4))
