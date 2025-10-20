@@ -48,16 +48,38 @@ def download_file(url, filename):
         f.write(r.content)
 
 def clone_repo(repo_url):
-    # TODO
-    raise NotImplementedError
+    """
+    Clone a GitHub repository using git clone.
+    """
+    repo_name = repo_url.split("/")[-1]  # e.g., "119-hw1"
+    if not os.path.exists(repo_name):
+        subprocess.run(["git", "clone", repo_url], check=True)
+    return repo_name
 
 def run_script(script_path, data_path):
-    # TODO
-    raise NotImplementedError
+    """
+    Run a Python script on the given data file.
+    """
+    # Ensure output directory exists
+    os.makedirs("output", exist_ok=True)
+    # Run the script and capture output
+    subprocess.run(["python3", script_path, data_path], check=True)
 
 def setup(repo_url, data_url, script_path):
-    # TODO
-    raise NotImplementedError
+    """
+    Complete the setup:
+    1. Download the data file.
+    2. Clone the GitHub repository.
+    3. Run the specified Python script on the data.
+    """
+    # Download the data file
+    download_file(data_url, "input.txt")
+    
+    # Clone the repo
+    clone_repo(repo_url)
+    
+    # Run the script
+    run_script(script_path, "input.txt")
 
 def q1():
     # Call setup as described in the prompt
@@ -66,7 +88,22 @@ def q1():
     # TODO
     # Return the integer value of the output
     # TODO
-    raise NotImplementedError
+    """
+    Run the setup as described and return the integer output
+    from output/test-output.txt
+    """
+    setup(
+        "https://github.com/DavisPL-Teaching/119-hw1",
+        "https://raw.githubusercontent.com/DavisPL-Teaching/119-hw1/refs/heads/main/data/test-input.txt",
+        "test-script.py"
+    )
+    
+    # Read the output file
+    with open("output/test-output.txt", "r") as f:
+        output_str = f.read().strip()
+    
+    return int(output_str)
+
 
 """
 2.
@@ -78,13 +115,20 @@ a. When might you need to use a script like setup() above in
 this scenario?
 
 === ANSWER Q2a BELOW ===
-
+You would use a script like setup() whenever you need to automate repetitive tasks for fetching and preparing data. 
+For example:
+Every 2 weeks, to download the latest dataset from the web.
+To ensure everyone on the team has the same version of the repository and scripts.
+To run preprocessing or analysis scripts consistently without manually executing multiple commands.
 === END OF Q2a ANSWER ===
 
 Do you see an alternative to using a script like setup()?
 
 === ANSWER Q2b BELOW ===
-
+An alternative could be:
+Manual execution of commands (download file, clone repo, run script).
+Using a Makefile or shell script to automate the steps.
+Using workflow tools like Airflow, Prefect, or Snakemake to schedule and automate data fetching and script execution.
 === END OF Q2b ANSWER ===
 
 3.
@@ -125,16 +169,28 @@ any packages?
 """
 
 def setup_for_new_machine():
-    # TODO
-    raise NotImplementedError
+    """
+    Install all necessary Python packages for HW1 to run
+    on a brand-new machine using pip3 or conda.
+    """
 
+    # List of packages needed in HW1
+    packages = [
+        "pandas",
+        "numpy",
+        "matplotlib",
+        "seaborn",
+        "requests"
+    ]
+
+    # Install packages via pip3
+    for pkg in packages:
+        subprocess.run([sys.executable, "-m", "pip", "install", pkg], check=True)
 def q3():
     # As your answer, return a string containing
     # the operating system name that you assumed the
     # new machine to have.
-    # TODO
-    raise NotImplementedError
-    # os =
+    os = "Linux"
     return os
 
 """
@@ -147,7 +203,10 @@ scripts like setup() and setup_for_new_machine()
 in their day-to-day jobs?
 
 === ANSWER Q4 BELOW ===
-
+I think In larger-scale projects, data scientists spend a 50%  of their time writing scripts like setup() and setup_for_new_machine().
+Even though the main job is analyzing data and building models, a lot of time is actually spent ona utomating data fetching and preprocessing,
+setting up new environmentsor reproducibility, and ensuring team members or automated pipelines can run scripts without manual intervention.
+In other words, writing setup and automation scripts is a core part of making data science work.
 === END OF Q4 ANSWER ===
 
 5.
@@ -164,7 +223,9 @@ If you don't have a friend's machine, please speculate about
 what might happen if you tried. You can guess.
 
 === ANSWER Q5 BELOW ===
-
+I did not run the script on a friend’s machine, but if I did, here’s what I would expect. The script would attempt to install all the required packages using pip3.
+On a machine with Python 3.12 installed, it would likely succeed in installing packages like pandas, numpy, matplotlib. Potential issues would be
+network problems, permission issues of installing packages, and wrong versions.
 === END OF Q5 ANSWER ===
 
 ===== Questions 6-9: A comparison of shell vs. Python =====
@@ -221,21 +282,32 @@ with:
 """
 
 def pipeline_shell():
-    # TODO
-    raise NotImplementedError
+    #Count the number of rows in population.csv using shell commands.
+    #Skip header line and count remaining lines
+    cmd = "tail -n +2 population.csv | wc -l"
+    output = os.popen(cmd).read().strip()
     # Return resulting integer
+    return int(output)
 
 def pipeline_pandas():
-    # TODO
-    raise NotImplementedError
+    #Count the number of rows in population.csv using Pandas.
+    df = pd.read_csv("population.csv")
     # Return resulting integer
+    return df.shape[0]
+
 
 def q6():
     # As your answer to this part, check that both
     # integers are the same and return one of them.
-    # TODO
-    raise NotImplementedError
-
+    """
+    Check that both methods return the same integer and return one of them.
+    """
+    shell_count = pipeline_shell()
+    pandas_count = pipeline_pandas()
+    
+    assert shell_count == pandas_count, "Shell and Pandas counts do not match"
+    return shell_count
+    
 """
 Let's do a performance comparison between the two methods.
 
@@ -252,8 +324,25 @@ def q7():
     # Return a list of two floats
     # [throughput for shell, throughput for pandas]
     # (in rows per second)
-    # TODO
-    raise NotImplementedError
+    # Measure throughput using ThroughputHelper
+    shell_helper = part2.ThroughputHelper(pipeline_shell)
+    pandas_helper = part2.ThroughputHelper(pipeline_pandas)
+
+    shell_tp = shell_helper.throughput
+    pandas_tp = pandas_helper.throughput
+
+    # generate a simple bar plot and save
+    import matplotlib.pyplot as plt
+    methods = ["Shell", "Pandas"]
+    values = [shell_tp, pandas_tp]
+    plt.figure(figsize=(6,4))
+    plt.bar(methods, values, color=['blue', 'orange'])
+    plt.ylabel("Throughput (rows/sec)")
+    plt.title("Shell vs Pandas Throughput")
+    plt.savefig("output/part3-q7.png")
+    plt.close()
+
+    return [shell_tp, pandas_tp]
 
 """
 8. Latency
@@ -271,8 +360,25 @@ def q8():
     # Return a list of two floats
     # [latency for shell, latency for pandas]
     # (in milliseconds)
-    # TODO
-    raise NotImplementedError
+    # Measure latency using LatencyHelper
+    shell_helper = part2.LatencyHelper(pipeline_shell)
+    pandas_helper = part2.LatencyHelper(pipeline_pandas)
+
+    shell_lat = shell_helper.latency * 1000  # convert seconds to milliseconds
+    pandas_lat = pandas_helper.latency * 1000
+
+    # Generate bar plot and save
+    import matplotlib.pyplot as plt
+    methods = ["Shell", "Pandas"]
+    values = [shell_lat, pandas_lat]
+    plt.figure(figsize=(6,4))
+    plt.bar(methods, values, color=['green', 'purple'])
+    plt.ylabel("Latency (ms)")
+    plt.title("Shell vs Pandas Latency")
+    plt.savefig("output/part3-q8.png")
+    plt.close()
+
+    return [shell_lat, pandas_lat]
 
 """
 9. Which method is faster?
