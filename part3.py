@@ -41,6 +41,9 @@ get uploaded when you submit.
 
 # You may need to conda install requests or pip3 install requests
 import requests
+import os
+import subprocess
+import pandas as pd
 
 def download_file(url, filename):
     r = requests.get(url)
