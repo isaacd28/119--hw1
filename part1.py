@@ -900,33 +900,30 @@ Use your new column to sort the data by the new values and return the top 10 uni
 
 def q20a(dfs):
     # For your answer, return the score for Berkeley in the new column.
-    # ensure numeric overall score
-    df = dfs[2].copy()
-    # Start cheat_score as the same as overall score
+    df = dfs[2].copy()  # 2021 dataframe
+
+    # Normalize column names to lowercase and stripped
+    df.columns = df.columns.str.strip().str.lower()
+
+    # Create a cheat_score based on overall score but add a bonus for Berkeley
     df['cheat_score'] = df['overall score'].copy()
-    
-    # Find the exact name of UC Berkeley in the dataset
-    match = df['university'].str.contains('Berkeley', case=False, regex=True)
-    if not match.any():
-        raise ValueError("UC Berkeley not found in the dataframe!")
-    
-    # Boost Berkeley's score
-    df.loc[match, 'cheat_score'] += 1000
-    
-    # Return Berkeley's cheat_score
-    return float(df.loc[match, 'cheat_score'].iloc[0])
+    df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'] += 50  # obvious boost
+
+    # Return the score for Berkeley
+    berkeley_score = df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'].iloc[0]
+    return float(berkeley_score)
+
 
 def q20b(dfs):
     # For your answer, return the top 10 university names as a list.
     df = dfs[2].copy()
-    # Add the cheat_score column as in q20a
+    df.columns = df.columns.str.strip().str.lower()
     df['cheat_score'] = df['overall score'].copy()
-    match = df['university'].str.contains('Berkeley', case=False, regex=True)
-    df.loc[match, 'cheat_score'] += 1000
-    
-    df_sorted = df.sort_values('cheat_score', ascending=False)
-    
-    return df_sorted['university'].iloc[:10].tolist()
+    df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'] += 50
+
+    top_10 = df.sort_values('cheat_score', ascending=False).head(10)
+    return top_10['university'].tolist()
+
   
 """
 21. Exploring data manipulation and falsification, continued
@@ -945,30 +942,24 @@ Return the top 10 university names as a list from the falsified data.
 """
 
 def q21():
-    src = 'data/2021.csv'
-    dst = 'data/2021_falsified.csv'
+    # Load the original CSV
+    df = pd.read_csv("data/2021.csv")
 
-    df = pd.read_csv(src, encoding='latin-1')
+    # Normalize column names
+    df.columns = df.columns.str.strip().str.lower()
+
+    # Convert overall score to numeric safely
     df['overall score'] = pd.to_numeric(df['overall score'], errors='coerce').fillna(0)
 
-    mask = df['university'].astype(str).str.lower().str.contains('berkeley')
-    if mask.any():
-        # boost Berkeley so it becomes first
-        current_max = df['overall score'].max()
-        df.loc[mask, 'overall score'] = current_max + 1.0
-    else:
-        # fallback: boost the current max row (ensures someone becomes first)
-        idx = df['overall score'].idxmax()
-        df.loc[idx, 'overall score'] = df['overall score'].max() + 1.0
+    # Give UC Berkeley a bonus to come out on top
+    df['overall score'] += df['university'].str.strip().apply(lambda x: 50 if x == 'UC Berkeley' else 0)
 
-    # save falsified file
-    df.to_csv(dst, index=False, encoding='latin-1')
+    # Save the falsified file
+    df.to_csv("data/2021_falsified.csv", index=False)
 
-    # return top 10 by (falsified) overall score
-    df_f = pd.read_csv(dst, encoding='latin-1')
-    df_f['overall score'] = pd.to_numeric(df_f['overall score'], errors='coerce').fillna(0)
-    top10 = df_f.sort_values('overall score', ascending=False).head(10)
-    return list(top10['university'].astype(str))
+    # Return top 10 universities
+    top_10 = df.sort_values('overall score', ascending=False).head(10)
+    return top_10['university'].tolist()
 
 """
 22. Exploring data manipulation and falsification, continued
