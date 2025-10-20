@@ -10,6 +10,9 @@ to report which one is faster.
 """
 
 import part1
+import pandas as pd
+import os
+import matplotlib.pyplot as plt
 
 """
 === Questions 1-5: Throughput and Latency Helpers ===
