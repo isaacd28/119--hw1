@@ -696,43 +696,45 @@ def for_loop_pipeline(df):
     # Make sure we work on a copy
     df = df.copy()
 
-    # Ensure data is sorted for consistent iteration
-    df = df.sort_values(["country", "year"])
+    # Sort by country and year for consistent iteration
+    df = df.sort_values(["Entity", "Year"])
 
     growth_rates = []
     current_country = None
     first_year = None
     first_pop = None
+    last_year = None
+    last_pop = None
 
-    # Iterate through rows manually 
+    # Iterate through rows manually
     for _, row in df.iterrows():
-        country = row["country"]
-        year = row["year"]
-        pop = row["population"]
+        country = row["Entity"]
+        year = row["Year"]
+        pop = row["Population (historical)"]
 
-        # Start new country
         if country != current_country:
-            if current_country is not None and first_year is not None and year_max > first_year:
-                # Compute growth for the previous country
-                diff = pop_max - first_pop
-                growth_rates.append(diff / (year_max - first_year))
+            # Save growth for the previous country
+            if current_country is not None and last_year > first_year:
+                growth = (last_pop - first_pop) / (last_year - first_year)
+                growth_rates.append(growth)
+
             # Reset for new country
             current_country = country
             first_year = year
             first_pop = pop
-            pop_max = pop
-            year_max = year
+            last_year = year
+            last_pop = pop
         else:
             # Update latest year and population
-            year_max = year
-            pop_max = pop
+            last_year = year
+            last_pop = pop
 
-    # Final country
-    if current_country is not None and first_year is not None and year_max > first_year:
-        diff = pop_max - first_pop
-        growth_rates.append(diff / (year_max - first_year))
+    # Handle the last country
+    if current_country is not None and last_year > first_year:
+        growth = (last_pop - first_pop) / (last_year - first_year)
+        growth_rates.append(growth)
 
-    # Manually compute summary statistics
+    # Compute summary statistics manually
     min_val = float(np.min(growth_rates))
     median_val = float(np.median(growth_rates))
     max_val = float(np.max(growth_rates))
@@ -740,7 +742,6 @@ def for_loop_pipeline(df):
     std_val = float(np.std(growth_rates))
 
     return [min_val, median_val, max_val, mean_val, std_val]
-
 
 def q11():
     # As your answer to this part, call load_input() and then
