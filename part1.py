@@ -201,29 +201,17 @@ remember to check the output in part1-answers.txt.
 
 def q3(dfs):
     # Helper function to clean university names: strip whitespace and lowercase
-      def clean_names(df):
-        return set(df['university'].str.strip().str.lower())
+    def normalize(name):
+        # Lowercase, strip whitespace, remove punctuation
+        name = name.strip().lower()
+        name = re.sub(r'[^a-z0-9 ]', '', name)
+        return name
 
-    set_2019 = clean_names(dfs[0])
-    set_2020 = clean_names(dfs[1])
-    set_2021 = clean_names(dfs[2])
+    # Create sets of normalized names for each year
+    sets = [set(df['university'].map(normalize)) for df in dfs]
 
-    # Compare 2019 vs 2020
-    diff_2019_2020 = set_2019.symmetric_difference(set_2020)
-    diff_2020_2021 = set_2020.symmetric_difference(set_2021)
-    diff_2019_2021 = set_2019.symmetric_difference(set_2021)
-
-    if diff_2019_2020 or diff_2020_2021 or diff_2019_2021:
-        print("Differences found:")
-        if diff_2019_2020:
-            print("2019 vs 2020:", diff_2019_2020)
-        if diff_2020_2021:
-            print("2020 vs 2021:", diff_2020_2021)
-        if diff_2019_2021:
-            print("2019 vs 2021:", diff_2019_2021)
-        return False
-
-    return True
+    # Return True if all sets are equal
+    return sets[0] == sets[1] == sets[2]
 
 """
 3b (commentary)
