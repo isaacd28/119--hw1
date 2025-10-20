@@ -345,9 +345,12 @@ def q7():
     shell_helper = part2.ThroughputHelper()
     pandas_helper = part2.ThroughputHelper()
 
-    # Add pipelines directly
-    shell_helper.add_pipeline("Shell", pipeline_shell)
-    pandas_helper.add_pipeline("Pandas", pipeline_pandas)
+    # Load number of rows once
+    n_rows = len(part2.load_input_large())
+
+    # Add pipelines with correct arguments
+    shell_helper.add_pipeline("Shell", n_rows, pipeline_shell)
+    pandas_helper.add_pipeline("Pandas", n_rows, pipeline_pandas)
 
     # Measure throughputs
     shell_tp = shell_helper.compare_throughput()[0]
