@@ -407,36 +407,51 @@ See if you can compute this using Pandas functions only.
 def load_input(filename):
     # Return a dataframe containing the population data
     # **Clean the data here**
+    # Load CSV
     df = pd.read_csv(filename)
-
-     remove_entities = ["World", "Asia", "Europe", "Africa", "Oceania", 
-                       "North America", "South America"]
-    df = df[~df["Entity"].isin(remove_entities)]
+    
+    # Remove world and continents
+    df = df[df['Code'] != 'OWID_WRL']  # drop world
+    continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+    df = df[~df['Entity'].isin(continents)]
+    
+    # Keep only necessary columns
+    df = df[['Entity', 'Year', 'Population (historical)']]
+    
     return df
-
+    
 def population_pipeline(df):
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
+    # Group by country to get min and max year
     grouped = df.groupby("Entity").agg(
-        min_year=("year", "min"),
-        max_year=("year", "max"),
-        min_pop=("population", "min"),
-        max_pop=("population", "max")
+        min_year=("Year", "min"),
+        max_year=("Year", "max")
     )
 
-    # Keep only countries with data from multiple years
+    # Population at earliest year
+    min_pop = df.loc[df.groupby("Entity")["Year"].idxmin(), ["Entity", "Population (historical)"]].set_index("Entity")
+    grouped = grouped.join(min_pop.rename(columns={"Population (historical)": "min_pop"}))
+
+    # Population at latest year
+    max_pop = df.loc[df.groupby("Entity")["Year"].idxmax(), ["Entity", "Population (historical)"]].set_index("Entity")
+    grouped = grouped.join(max_pop.rename(columns={"Population (historical)": "max_pop"}))
+
+    # Keep only countries with multiple years
     grouped["years_diff"] = grouped["max_year"] - grouped["min_year"]
     grouped = grouped[grouped["years_diff"] > 0]
 
     # Compute yearly population growth
-    grouped["pop_increase_per_year"] = (
-        (grouped["max_pop"] - grouped["min_pop"]) / grouped["years_diff"]
-    )
+    grouped["pop_increase_per_year"] = (grouped["max_pop"] - grouped["min_pop"]) / grouped["years_diff"]
 
-    # Compute summary statistics
-    stats = grouped["pop_increase_per_year"].describe()
+    # Compute summary statistics explicitly
+    min_val = grouped["pop_increase_per_year"].min()
+    median_val = grouped["pop_increase_per_year"].median()
+    max_val = grouped["pop_increase_per_year"].max()
+    mean_val = grouped["pop_increase_per_year"].mean()
+    std_val = grouped["pop_increase_per_year"].std()
 
-    return [stats["min"], stats["50%"], stats["max"], stats["mean"], stats["std"]]
+    return [min_val, median_val, max_val, mean_val, std_val]
 
 def q6():
     # As your answer to this part,
@@ -531,10 +546,14 @@ def baseline_medium():
     return population_pipeline(df)
     
 def baseline_large():
-    raise NotImplementedError
-
+    # Run the population pipeline on the large dataset
+    df = load_input_large()
+    return population_pipeline(df)
+    
 def baseline_latency():
-    raise NotImplementedError
+    df = load_input_small().head(2)  # using first 2 rows as an example
+    return population_pipeline(df)
+
 
 def q8():
     # Don't modify this part
