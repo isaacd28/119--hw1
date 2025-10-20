@@ -773,7 +773,7 @@ def q13a():
     # Add all 6 pipelines for a throughput comparison
     # Generate plot in ouptut/q13a.png
     # Return list of 6 throughputs
- import os
+    import os
     os.makedirs("output", exist_ok=True)
 
     h = ThroughputHelper()
