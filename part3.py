@@ -445,6 +445,13 @@ def log_answer(name, func, *args):
             f.write(f'{name},Not Implemented\n')
         global UNFINISHED
         UNFINISHED += 1
+    except Exception as e:
+        print(f"Error running {name}: {e}")
+        with open(ANSWER_FILE, 'a') as f:
+            f.write(f'{name},Error: {e}\n')
+        global UNFINISHED
+        UNFINISHED += 1
+
 
 def PART_3_PIPELINE():
     open(ANSWER_FILE, 'w').close()
