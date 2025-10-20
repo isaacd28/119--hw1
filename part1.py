@@ -581,33 +581,34 @@ def q12a(avg_2021):
     Return the top region and one region that went down in rankings from 2019 to 2021.
     """
     dfs = load_input()
-    
-    # Average overall scores by region for 2019
     df2019 = dfs[0]
+    
+    # Columns to average
     attrs = ['academic reputation', 'employer reputation', 'faculty student',
              'citations per faculty', 'overall score']
+    
+    # Compute average overall score by region for 2019
     avg_2019 = df2019.groupby('region')[attrs].mean().reset_index()
     
-    # Sort 2019 and 2021 by overall score
-    top_2021 = avg_2021.sort_values('overall score', ascending=False).iloc[0]['region']
+    # Sort 2019 and 2021 by overall score descending
+    avg_2019_sorted = avg_2019.sort_values('overall score', ascending=False).reset_index(drop=True)
+    avg_2021_sorted = avg_2021.sort_values('overall score', ascending=False).reset_index(drop=True)
     
-    # Find a region that went down: compare rankings
-    # Sort by overall score descending for both
-    avg_2019_sorted = avg_2019.sort_values('overall score', ascending=False)
+    # Top region in 2021
+    top_2021 = avg_2021_sorted.iloc[0]['region']
     
-    # Pick a region whose rank decreased
-    region_2019_ranks = {row['region']: i for i, row in enumerate(avg_2019_sorted.itertuples(), start=1)}
-    avg_2021_sorted = avg_2021.sort_values('overall score', ascending=False)
-    
-    region_2021_ranks = {row['region']: i for i, row in enumerate(avg_2021_sorted.itertuples(), start=1)}
-    
+    # Find a region that went down
     region_went_down = None
-    for region in region_2019_sorted['region']:
-        if region_2019_ranks[region] < region_2021_ranks.get(region, 1000):
-            region_went_down = region
-            break
+    for region in avg_2019_sorted['region']:
+        if region in avg_2021_sorted['region'].values:
+            rank_2019 = avg_2019_sorted[avg_2019_sorted['region'] == region].index[0]
+            rank_2021 = avg_2021_sorted[avg_2021_sorted['region'] == region].index[0]
+            if rank_2021 > rank_2019:
+                region_went_down = region
+                break
     
     return (top_2021, region_went_down)
+
 
 """
 12b.
