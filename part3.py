@@ -419,7 +419,10 @@ def q8():
 Comment on anything else you notice below.
 
 === ANSWER Q9 BELOW ===
-
+Pandas is generally faster than the Shell method for processing the full dataset. This is because Pandas operations 
+are vectorized and optimized, while the Shell approach usually involves slower interpreted loops or command-line operations per row. Therefore, 
+the Pandas pipeline should have a higher throughput (more rows per second). Latency measures the time for a single row to be processed. Shell commands often have higher overhead per row, 
+so the Pandas method is typically faster here as well.
 === END OF Q9 ANSWER ===
 """
 
