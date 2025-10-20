@@ -352,9 +352,8 @@ def q5a():
 def q5b():
     # Return the latency of the pipeline in part 1.
     import part1
-    single_row = part1.load_input().iloc[0:1]
     h = LatencyHelper()
-    # PART_1_PIPELINE takes no arguments
+    # PART_1_PIPELINE takes no arguments, so we just call it
     h.add_pipeline("part1_pipeline_latency", lambda: part1.PART_1_PIPELINE())
 
     latencies = h.compare_latency()
