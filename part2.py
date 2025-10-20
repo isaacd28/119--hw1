@@ -343,7 +343,9 @@ def q5a():
     import part1
     data = part1.load_input()
     h = ThroughputHelper()
-    h.add_pipeline("part1_pipeline", len(data), lambda: part1.PART_1_PIPELINE(data.copy()))
+    # PART_1_PIPELINE takes no arguments, so we just call it
+    h.add_pipeline("part1_pipeline", len(data), lambda: part1.PART_1_PIPELINE())
+
     throughputs = h.compare_throughput()
     return throughputs[0]  # only one pipeline
 
@@ -352,9 +354,11 @@ def q5b():
     import part1
     single_row = part1.load_input().iloc[0:1]
     h = LatencyHelper()
-    h.add_pipeline("part1_pipeline_latency", lambda: part1.PART_1_PIPELINE(single_row))
+    # PART_1_PIPELINE takes no arguments
+    h.add_pipeline("part1_pipeline_latency", lambda: part1.PART_1_PIPELINE())
+
     latencies = h.compare_latency()
-    return latencies[0]  # only one pipeline
+    return latencies[0]
 
 """
 ===== Questions 6-10: Performance Comparison 1 =====
