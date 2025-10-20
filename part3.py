@@ -339,8 +339,8 @@ def q7():
     shell_helper = part2.ThroughputHelper()
     pandas_helper = part2.ThroughputHelper()
 
-    shell_tp = shell_helper.throughput(pipeline_shell)
-    pandas_tp = pandas_helper.throughput(pipeline_pandas)
+    shell_tp = shell_helper.throughputs(pipeline_shell)
+    pandas_tp = pandas_helper.throughputs(pipeline_pandas)
 
     # generate a simple bar plot and save
     import matplotlib.pyplot as plt
