@@ -204,7 +204,10 @@ def clean_names(df):
     Standardize the 'university' column: lowercase and strip spaces.
     """
     df = df.copy()
-    df['university'] = df['university'].str.strip().str.lower()
+    df['university'] = df['university'].astype(str).str.strip().str.lower()
+    df['university'] = df['university'].apply(
+        lambda x: unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode('ascii')
+    )
     return df
 
 def q3(dfs):
@@ -900,44 +903,33 @@ Use your new column to sort the data by the new values and return the top 10 uni
 
 def q20a(dfs):
     # For your answer, return the score for Berkeley in the new column.
-    # Use the 2021 dataframe
     df_2021 = dfs[2].copy()
+    # Compute cheat score
     df_2021['cheat_score'] = (df_2021['overall score'] * 0.5 +
                               df_2021['academic reputation'] * 0.3 +
                               df_2021['employer reputation'] * 0.2)
     
-    # Boost Berkeley safely
-    df_2021.loc[df_2021['university'] == 'UC Berkeley', 'cheat_score'] += 50
+    # Boost UC Berkeley
+    df_2021.loc[df_2021['university'].str.lower() == 'uc berkeley', 'cheat_score'] += 50
 
-    # Get Berkeley's cheat_score safely
-    berkeley_score = df_2021.loc[df_2021['university'] == 'UC Berkeley', 'cheat_score']
-    if not berkeley_score.empty:
-        return float(berkeley_score.iloc[0])
-    else:
-        # Return None or 0 if UC Berkeley is not present
-        return 0
+    # Get UC Berkeley's cheat score
+    berkeley_score = df_2021.loc[df_2021['university'].str.lower() == 'uc berkeley', 'cheat_score']
+    return float(berkeley_score.iloc[0]) if not berkeley_score.empty else 0
 
 
 def q20b(dfs):
     # For your answer, return the top 10 university names as a list.
     df_2021 = dfs[2].copy()
-    
-    # Recalculate cheat_score
     df_2021['cheat_score'] = (df_2021['overall score'] * 0.5 +
                               df_2021['academic reputation'] * 0.3 +
                               df_2021['employer reputation'] * 0.2)
-    
-    # Boost Berkeley safely
-    df_2021.loc[df_2021['university'] == 'UC Berkeley', 'cheat_score'] += 50
 
-    # Sort descending by cheat_score
+    df_2021.loc[df_2021['university'].str.lower() == 'uc berkeley', 'cheat_score'] += 50
+
     df_sorted = df_2021.sort_values('cheat_score', ascending=False)
-
-    # Take top 10 universities safely
     top10 = df_sorted.head(10)
-
-    # Return as list; if less than 10 rows exist, it just returns what’s available
     return top10['university'].tolist()
+
 
   
 """
