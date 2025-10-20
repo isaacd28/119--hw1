@@ -44,6 +44,8 @@ import requests
 import os
 import subprocess
 import pandas as pd
+df = pd.read_csv("data/population.csv")
+
 
 def download_file(url, filename):
     r = requests.get(url)
@@ -294,7 +296,7 @@ def pipeline_shell():
 
 def pipeline_pandas():
     #Count the number of rows in population.csv using Pandas.
-    df = pd.read_csv("population.csv")
+    df = pd.read_csv("data/population.csv")
     # Return resulting integer
     return df.shape[0]
 
