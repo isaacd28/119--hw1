@@ -941,23 +941,34 @@ Return the top 10 university names as a list from the falsified data.
 
 def q21():
     # Load the original CSV
-    df = pd.read_csv("data/2021.csv")
-
-    # Normalize column names
-    df.columns = df.columns.str.strip().str.lower()
-
-    # Convert overall score to numeric safely
-    df['overall score'] = pd.to_numeric(df['overall score'], errors='coerce').fillna(0)
-
-    # Give UC Berkeley a bonus to come out on top
-    df['overall score'] += df['university'].str.strip().apply(lambda x: 50 if x == 'UC Berkeley' else 0)
-
-    # Save the falsified file
-    df.to_csv("data/2021_falsified.csv", index=False)
-
-    # Return top 10 universities
-    top_10 = df.sort_values('overall score', ascending=False).head(10)
-    return top_10['university'].tolist()
+    try:
+        # Read CSV using latin1 encoding to avoid UnicodeDecodeError
+        df = pd.read_csv("data/2021.csv", encoding='latin1')
+    except FileNotFoundError:
+        print("Error: '2021.csv' file not found in 'data/' folder.")
+        return None
+    except Exception as e:
+        print("Error reading CSV:", e)
+        return None
+    
+    # Example processing: remove extra spaces from column names
+    df.columns = df.columns.str.strip()
+    
+    # Example: remove rows with missing university names
+    df = df[df['university'].notna()]
+    
+    # Example: compute a simple score column (like a cheat score)
+    if 'overall score' in df.columns and 'academic reputation' in df.columns and 'employer reputation' in df.columns:
+        df['score'] = df['overall score']*0.5 + df['academic reputation']*0.3 + df['employer reputation']*0.2
+    else:
+        # If columns are missing, just fill with NaN
+        df['score'] = float('nan')
+    
+    # Return the dataframe or any result you need; here I return top 10 universities by score
+    df_sorted = df.sort_values('score', ascending=False)
+    top10_universities = df_sorted['university'].head(10).tolist()
+    
+    return top10_universities
 
 """
 22. Exploring data manipulation and falsification, continued
