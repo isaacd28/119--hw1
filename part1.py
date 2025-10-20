@@ -325,7 +325,6 @@ We will use this in the unit tests below.
 """
 
 def q5c():
-    # TODO: fill this in with the expected number
     return 100
 
 
