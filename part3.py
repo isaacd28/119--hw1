@@ -345,15 +345,15 @@ def q7():
     shell_helper = part2.ThroughputHelper()
     pandas_helper = part2.ThroughputHelper()
 
-    # Add pipelines
+    # Add the pipelines
     shell_helper.add_pipeline("Shell", len(part2.load_input_large()), pipeline_shell)
     pandas_helper.add_pipeline("Pandas", len(part2.load_input_large()), pipeline_pandas)
 
     # Measure throughputs
     shell_tp = shell_helper.compare_throughput()[0]
     pandas_tp = pandas_helper.compare_throughput()[0]
-    
-    # generate a simple bar plot and save
+
+    # Generate bar plot
     methods = ["Shell", "Pandas"]
     values = [shell_tp, pandas_tp]
     plt.figure(figsize=(6,4))
