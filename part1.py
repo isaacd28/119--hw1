@@ -900,29 +900,34 @@ Use your new column to sort the data by the new values and return the top 10 uni
 
 def q20a(dfs):
     # For your answer, return the score for Berkeley in the new column.
-    df = dfs[2].copy()  # 2021 dataframe
-
-    # Normalize column names to lowercase and stripped
-    df.columns = df.columns.str.strip().str.lower()
-
-    # Create a cheat_score based on overall score but add a bonus for Berkeley
-    df['cheat_score'] = df['overall score'].copy()
-    df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'] += 50  # obvious boost
-
-    # Return the score for Berkeley
-    berkeley_score = df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'].iloc[0]
-    return float(berkeley_score)
+    # Use the 2021 dataframe
+    df = dfs[2].copy()
+    
+    # Make sure 'university' column has no extra spaces
+    df['university'] = df['university'].str.strip()
+    
+    # Create a simple cheat score: just use the overall score
+    df['cheat_score'] = pd.to_numeric(df['overall score'], errors='coerce').fillna(0)
+    
+    # Give a big boost to UC Berkeley
+    df.loc[df['university'] == 'UC Berkeley', 'cheat_score'] += 1000
+    
+    # Return Berkeley's new cheat score
+    return float(df.loc[df['university'] == 'UC Berkeley', 'cheat_score'].iloc[0])
 
 
 def q20b(dfs):
     # For your answer, return the top 10 university names as a list.
     df = dfs[2].copy()
-    df.columns = df.columns.str.strip().str.lower()
-    df['cheat_score'] = df['overall score'].copy()
-    df.loc[df['university'].str.strip() == 'UC Berkeley', 'cheat_score'] += 50
-
-    top_10 = df.sort_values('cheat_score', ascending=False).head(10)
-    return top_10['university'].tolist()
+    df['university'] = df['university'].str.strip()
+    
+    # Create the cheat_score
+    df['cheat_score'] = pd.to_numeric(df['overall score'], errors='coerce').fillna(0)
+    df.loc[df['university'] == 'UC Berkeley', 'cheat_score'] += 1000
+    
+    # Sort by the cheat_score descending and get top 10 university names
+    top10_names = df.sort_values('cheat_score', ascending=False)['university'].head(10).tolist()
+    return top10_names
 
   
 """
