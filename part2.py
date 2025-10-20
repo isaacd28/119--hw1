@@ -16,18 +16,6 @@ import matplotlib.pyplot as plt
 # Make sure the 'data' folder exists
 os.makedirs("data", exist_ok=True)
 
-# Create smaller CSV files from the full population.csv
-full_df = pd.read_csv("data/population.csv")
-
-# Small dataset: first 600 rows + header
-df.iloc[:600].to_csv("data/population-small.csv", index=False)
-
-
-# Medium dataset: first 6000 rows + header
-df.iloc[:6000].to_csv("data/population-medium.csv", index=False)
-
-# Single-row dataset: just the first row + header
-df.iloc[:1].to_csv("data/population-single-row.csv", index=False)
 
 
 """
