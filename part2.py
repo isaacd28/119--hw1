@@ -660,7 +660,9 @@ Which differs more, throughput or latency?
 What does this experiment show?
 
 ===== ANSWER Q10 BELOW =====
-
+The difference is noticeable but not huge. Pipelines using in-memory variables are a bit faster than those reading from files.
+Latency differs more, especially for small datasets. File reading adds extra time for each run, so it affects latency more than throughput.
+It shows that keeping data in memory is slightly faster than reading from files, but the biggest performance gains come from how the pipeline is written.
 ===== END OF Q10 ANSWER =====
 """
 
@@ -846,20 +848,28 @@ Comment on the results you got!
 14a. Which pipelines is faster in terms of throughput?
 
 ===== ANSWER Q14a BELOW =====
-
+From the throughput results, the baseline pipelines are consistently faster than the 
+for-loop pipelines for all dataset sizes—small, medium, and large. This is expected because 
+vectorized operations use  optimized implementations that process data in bulk, 
+while for-loop implementations iterate element by element, which is slower in Python.
 ===== END OF Q14a ANSWER =====
 
 14b. Which pipeline is faster in terms of latency?
 
 ===== ANSWER Q14b BELOW =====
-
+Similarly, the baseline pipeline shows lower latency than the for-loop pipeline. 
+This means that even for a single run, the vectorized pipeline completes faster, confirming 
+that vectorization improves both throughput and latency.
 ===== END OF Q14b ANSWER =====
 
 14c. Do you notice any other interesting observations?
 What does this experiment show?
 
 ===== ANSWER Q14c BELOW =====
-
+Performance gap grows with dataset size. 
+The difference in throughput between baseline and for-loop pipelines increases as the dataset gets larger. 
+For small datasets, the difference is noticeable but not too wide. For large datasets, the vectorized pipeline is significantly faster. 
+This highlights how vectorized operations scale much better with data size.
 ===== END OF Q14c ANSWER =====
 """
 
@@ -872,7 +882,10 @@ Which factor that we tested (file vs. variable, vectorized vs. for loop)
 had the biggest impact on performance?
 
 ===== ANSWER Q15 BELOW =====
-
+The vectorized vs. for-loop factor had the biggest impact on performance. 
+Across all dataset sizes, vectorized pipelines consistently achieved higher throughput and lower latency compared to for-loop pipelines. 
+While the file vs. variable difference had some effect—loading from a variable is slightly faster than reading from a 
+file—the performance gap was small.
 ===== END OF Q15 ANSWER =====
 
 16.
@@ -883,7 +896,8 @@ varies with the size of the input dataset.
 This is an open ended question.)
 
 ===== ANSWER Q16 BELOW =====
-
+The throughput tends to decrease as the input dataset size increases, but the rate of decrease depends on the pipeline type. 
+For vectorized pipelines, throughput decreases only slightly with increasing dataset size, showing that vectorization scales efficiently. 
 ===== END OF Q16 ANSWER =====
 
 17.
@@ -894,7 +908,10 @@ throughput is related to latency.
 This is an open ended question.)
 
 ===== ANSWER Q17 BELOW =====
-
+Throughput and latency appear to be inversely related through pipelines with higher throughput
+tend to have lower latency, while pipelines with lower throughput have higher latency. 
+This makes sense because higher throughput indicates that the pipeline can process more data per unit time, 
+My hypothesis is: as throughput increases, latency decreases, and the opposite.
 ===== END OF Q17 ANSWER =====
 """
 
