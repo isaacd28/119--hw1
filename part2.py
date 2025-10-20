@@ -187,6 +187,9 @@ Which pipeline has the highest throughput?
 Is this what you expected?
 
 === ANSWER Q2b BELOW ===
+The large list pipeline has the highest throughput according to the measured values just like I expected
+Throughput is measured in items per second and since the large list has many items, the item processing time is averaged over a huge number of items, giving a higher throughput. 
+The small list runs very quickly overall but has fewer items, so the measured throughput is lower in comparison.
 
 === END OF Q2b ANSWER ===
 """
@@ -220,14 +223,27 @@ class LatencyHelper:
         self.latencies = None
 
     def add_pipeline(self, name, func):
-        raise NotImplementedError
+        self.names.append(name)
+        self.pipelines.append(func)
 
     def compare_latency(self):
         # Measure the latency of all pipelines
         # and store it in a list in self.latencies.
         # Also, return the resulting list of latencies,
         # in **milliseconds.**
-        raise NotImplementedError
+        import time
+        self.latencies = []
+
+        for func in self.pipelines:
+            total_time = 0.0
+            for _ in range(NUM_RUNS):
+                start = time.time()
+                func()
+                end = time.time()
+                total_time += (end - start)
+            avg_time = total_time / NUM_RUNS
+            self.latencies.append(avg_time * 1000)  # convert to ms
+        return self.latencies
 
     def generate_plot(self, filename):
         # Generate a plot for latency using matplotlib.
@@ -235,7 +251,14 @@ class LatencyHelper:
         # the most sense.
         # Make sure you include a legend.
         # Save the result in the filename provided.
-        raise NotImplementedError
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(8,5))
+        plt.bar(self.names, self.latencies, color='lightgreen')
+        plt.ylabel("Latency (ms)")
+        plt.xlabel("Pipeline")
+        plt.title("Pipeline Latency Comparison")
+        plt.savefig(filename)
+        plt.close()
 
 """
 As your answer to this part,
@@ -246,7 +269,7 @@ process if the class is used correctly.
 def q3():
     # Return the number of input items in each dataset,
     # for the latency helper to run correctly.
-    raise NotImplementedError
+    return 1
 
 """
 4. To make sure your monitor is working, test it on
@@ -265,12 +288,20 @@ def q4a():
     # Create a LatencyHelper object
     h = LatencyHelper()
     # Add the single pipeline three times.
-    raise NotImplementedError
+    def single_item_pipeline():
+    add_list(LIST_SINGLE_ITEM)
+    h.add_pipeline("copy1", single_item_pipeline)
+    h.add_pipeline("copy2", single_item_pipeline)
+    h.add_pipeline("copy3", single_item_pipeline)
+
+    # Measure latencies
+    latencies = h.compare_latency()
     # Generate a plot.
+    h.generate_plot("output/part2-q4a.png")
     # Save the plot as 'output/part2-q4a.png'.
-    # TODO
     # Finally, return the latencies as a list.
-    # TODO
+    return latencies
+
 
 """
 4b.
