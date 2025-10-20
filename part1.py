@@ -906,28 +906,26 @@ def q20a(dfs):
     df['cheat_score'] = df['overall score'].copy()
     
     # Find the exact name of UC Berkeley in the dataset
-    # (likely "University of California, Berkeley")
-    uc_berkeley_name = 'University of California, Berkeley'
+    match = df['university'].str.contains('Berkeley', case=False, regex=True)
+    if not match.any():
+        raise ValueError("UC Berkeley not found in the dataframe!")
     
-    # Boost UC Berkeley's score significantly
-    df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'] += 1000
+    # Boost Berkeley's score
+    df.loc[match, 'cheat_score'] += 1000
     
-    # Return UC Berkeley's cheat_score
-    berkeley_score = df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'].iloc[0]
-    return float(berkeley_score)
+    # Return Berkeley's cheat_score
+    return float(df.loc[match, 'cheat_score'].iloc[0])
 
 def q20b(dfs):
     # For your answer, return the top 10 university names as a list.
     df = dfs[2].copy()
     # Add the cheat_score column as in q20a
     df['cheat_score'] = df['overall score'].copy()
-    uc_berkeley_name = 'University of California, Berkeley'
-    df.loc[df['university'].str.strip() == uc_berkeley_name, 'cheat_score'] += 1000
+    match = df['university'].str.contains('Berkeley', case=False, regex=True)
+    df.loc[match, 'cheat_score'] += 1000
     
-    # Sort by cheat_score descending
     df_sorted = df.sort_values('cheat_score', ascending=False)
     
-    # Return the top 10 university names as a list
     return df_sorted['university'].iloc[:10].tolist()
   
 """
