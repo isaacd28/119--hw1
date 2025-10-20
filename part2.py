@@ -309,6 +309,8 @@ How much did the latency vary between the three copies of the pipeline?
 Is this more or less than what you expected?
 
 === ANSWER Q4b BELOW ===
+The latency results: [0.000286102294921875, 0.00021457672119140625, 0.00030994415283203125]. 
+I thought it would vary much more but the difference is only a miniscule amount.
 
 === END OF Q4b ANSWER ===
 """
