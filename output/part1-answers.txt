@@ -1,1 +1,29 @@
-
+q1,3
+q2,True
+q3a,True
+q4,['The University of Auckland', 'Zhejiang University', 'Osaka University', 'The Chinese University of Hong Kong (CUHK)', 'University of California, San Diego (UCSD)']
+q5a,[100, 100, 100, 100, 100, 100, 100, 100]
+q5b,[100, 100, 100, 100, 100, 100, 100, 100]
+q5c,100
+q6c,2
+q7,[9, 9, 9]
+q8a,29
+q9,[67.041, 67.68, 73.539, 82.147, 75.504]
+q10,5
+q11,region                   Singapore
+academic reputation          82.25
+employer reputation           75.3
+faculty student              100.0
+citations per faculty        95.95
+overall score                 91.8
+Name: 13, dtype: object
+q12,('Singapore', 'South Korea')
+q13,output/part1-13a.png
+q14a,output/part1-14a.png
+q15,(10, 4)
+q16,['university', 'score_2019', 'score_2020', 'score_2021']
+q17,output/part1-17a.png
+q18,output/part1-18.png
+q20a,0
+q20b,['Massachusetts Institute of Technology (MIT)', 'ETH Zurich - Swiss Federal Institute of Technology', 'California Institute of Technology (Caltech)', 'University of Oxford', 'EPFL', 'Stanford University', 'Harvard University', 'UCL', 'University of Cambridge', 'Princeton University']
+q21,['Massachusetts Institute of Technology (MIT)', 'ETH Zurich - Swiss Federal Institute of Technology', 'California Institute of Technology (Caltech)', 'University of Oxford', 'EPFL', 'Stanford University', 'Harvard University', 'UCL', 'University of Cambridge', 'Princeton University']
