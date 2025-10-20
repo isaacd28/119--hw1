@@ -200,15 +200,20 @@ remember to check the output in part1-answers.txt.
 """
 
 def q3(dfs):
-    # Get the sets of university names for each year
-    set_2019 = set(dfs[0]['university'])
-    set_2020 = set(dfs[1]['university'])
-    set_2021 = set(dfs[2]['university'])
+    # Helper function to clean university names: strip whitespace and lowercase
+    def clean_names(df):
+        return set(df['university'].str.strip().str.lower())
 
-    # Return True if all sets are equal, False otherwise
-    return set_2019 == set_2020 == set_2021
+    #set from the first year
+    ref_set = clean_names(dfs[0])
 
-"""
+    # Compare with the other years
+    for df in dfs[1:]:
+        if clean_names(df) != ref_set:
+            return False
+
+    return True
+  
 3b (commentary).
 Did the checks pass or fail?
 Comment below and explain why.
