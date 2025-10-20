@@ -1,6 +1,6 @@
 q1,3
 q2,True
-q3a,False
+q3a,True
 q4,['The University of Auckland', 'Zhejiang University', 'Osaka University', 'The Chinese University of Hong Kong (CUHK)', 'University of California, San Diego (UCSD)']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
