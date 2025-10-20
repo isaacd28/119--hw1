@@ -773,6 +773,8 @@ def q17a(top_10):
     plt.ylabel('Overall Score')
     plt.ylim(0, 100) 
     plt.xticks(years, ['2019', '2020', '2021'])
+    # Add legend
+    plt.legend(title='University', bbox_to_anchor=(1.05, 1), loc='upper left')
 
     # Save the plot
     filename = "output/part1-17a.png"
