@@ -333,11 +333,21 @@ of the pipeline in part 1.
 
 def q5a():
     # Return the throughput of the pipeline in part 1.
-    raise NotImplementedError
+    import part1
+    data = part1.load_input()
+    h = ThroughputHelper()
+    h.add_pipeline("part1_pipeline", len(data), lambda: part1.PART_1_PIPELINE(data))
+    throughputs = h.compare_throughput()
+    return throughputs[0]  # only one pipeline
 
 def q5b():
     # Return the latency of the pipeline in part 1.
-    raise NotImplementedError
+    import part1
+    single_row = part1.load_input().iloc[0:1]
+    h = LatencyHelper()
+    h.add_pipeline("part1_pipeline_latency", lambda: part1.PART_1_PIPELINE(single_row))
+    latencies = h.compare_latency()
+    return latencies[0]  # only one pipeline
 
 """
 ===== Questions 6-10: Performance Comparison 1 =====
