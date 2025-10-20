@@ -643,7 +643,8 @@ b. Do you observe any anomalies in the box and whisker
 plot?
 
 === ANSWER Q13b BELOW ===
-
+The results of the boxplot scores are scattered all over. Academic reputation ranges from 40 to 80, employer reputation is average, the faculty student score is the highest. 
+The faculty student score also has a whisker that ranges very long starting at 20 and ending at 100.
 === END OF Q13b ANSWER ===
 """
 
@@ -678,7 +679,8 @@ def q14a(avg_2021):
 Do you observe any general trend?
 
 === ANSWER Q14b BELOW ===
-
+Countries like Taiwan, South Korea, and Japan have high academic reputation, but low employer reputation.
+Australia is almost at 100% for both categories. English speaking countries seem to have high academic reputation and employer reputation.
 === END OF Q14b ANSWER ===
 
 ===== Questions 15-20: Exploring the data further =====
@@ -851,7 +853,9 @@ def q18(dfs):
 part that you found surprising or interesting.
 
 === ANSWER Q19 BELOW ===
-
+One interesting entry is the correlation between faculty student ratio and overall score. 
+It is negative, meaning that universities with lower student-to-faculty ratios tend to have higher overall scores. 
+This makes sense because smaller class sizes often indicate more personalized attention and better resources, which can improve overall university performance.
 === END OF Q19 ANSWER ===
 """
 
