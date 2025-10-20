@@ -411,31 +411,26 @@ def load_input(filename):
 def population_pipeline(df):
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
-        grouped = df.groupby("location").agg(
+    grouped = df.groupby("location").agg(
         min_year=("year", "min"),
         max_year=("year", "max"),
         min_pop=("population", "min"),
         max_pop=("population", "max")
     )
 
-    # Calculate population increase per year
+    # Keep only countries with data from multiple years
     grouped["years_diff"] = grouped["max_year"] - grouped["min_year"]
-    grouped["pop_increase_per_year"] = (grouped["max_pop"] - grouped["min_pop"]) / grouped["years_diff"]
-
-    # Drop rows where there's only one year (years_diff == 0)
     grouped = grouped[grouped["years_diff"] > 0]
+
+    # Compute yearly population growth
+    grouped["pop_increase_per_year"] = (
+        (grouped["max_pop"] - grouped["min_pop"]) / grouped["years_diff"]
+    )
 
     # Compute summary statistics
     stats = grouped["pop_increase_per_year"].describe()
 
-    # Return a list of [min, median, max, mean, std]
-    return [
-        stats["min"],
-        stats["50%"],  # median
-        stats["max"],
-        stats["mean"],
-        stats["std"]
-    ]
+    return [stats["min"], stats["50%"], stats["max"], stats["mean"], stats["std"]]
 
 def q6():
     # As your answer to this part,
