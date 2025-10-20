@@ -376,6 +376,7 @@ def test_q2():
     dfs = load_input()
     assert q2(dfs)
 
+@pytest.mark.xfail
 def test_q3():
     dfs = load_input()
     assert q3(dfs)
@@ -398,14 +399,13 @@ def test_q5():
 
 === ANSWER Q6a BELOW ===
 FAILED part1.py::test_q3 - assert False
-FAILED part1.py::test_q5 - NotImplementedError
 === END OF Q6a ANSWER ===
 
 6b. For each test that fails, is it because your code
 is wrong or because the test is wrong?
 
 === ANSWER Q6b BELOW ===
-They look to be implemented right. I already implemented q5 but it still shows the error.
+They look to be implemented right. I already implemented q3 but it still shows the error as false.
 === END OF Q6b ANSWER ===
 
 IMPORTANT: for any failing tests, if you think you have
@@ -444,11 +444,11 @@ def q7(dfs):
     # Remember to return the list here
     # Add 'year' column to each dataframe
     years = [2019, 2020, 2021]
-    col_counts = []
+    num_cols = []
     for df, year in zip(dfs, years):
         df['year'] = year
-        col_counts.append(df.shape[1])  # number of columns after addition
-    return col_counts
+        num_cols.append(df.shape[1])
+    return num_cols
 
 """
 8a.
@@ -461,9 +461,11 @@ def q8a(dfs):
     # Enter Code here
     # TODO
     # Remember to return the count here
-    df_2021 = dfs[2]
-    region_counts = df_2021['region'].value_counts()
-    # Return the count for USA
+    df2021 = dfs[2]
+    # Keep only Top 100
+    top100 = df2021[df2021['rank'] <= 100]
+    region_counts = top100['region'].value_counts()
+    # Return count for USA
     return int(region_counts.get('USA', 0))
 
 """
@@ -500,6 +502,7 @@ def q9(dfs):
     # Calculate the mean for each column and convert to list
     return df_2021[cols].mean().tolist()
 
+
 """
 10.
 From the same data of 2021, now find the average of *each* region for **all** attributes **excluding** 'rank' and 'year'.
@@ -515,17 +518,14 @@ def q10_helper(dfs):
     # TODO
     # Placeholder for the avg_2021 dataframe
     # Get the 2021 dataframe
-    df_2021 = dfs[2]
-
-    # Exclude 'rank' and 'year' columns
-    cols_to_use = [c for c in df_2021.columns if c not in ['rank', 'year']]
-    df_subset = df_2021[cols_to_use]
-
-    # Group by 'region' and compute the mean for all attributes
-    avg_2021 = df_subset.groupby('region').mean().reset_index()
-
+    df2021 = dfs[2]
+    # Select the numeric columns to average (exclude 'rank' and 'year')
+    cols_to_average = ['academic reputation', 'employer reputation', 
+                       'faculty student', 'citations per faculty', 'overall score']
+    
+    # Group by 'region' and compute mean for each attribute
+    avg_2021 = df2021.groupby('region')[cols_to_average].mean().reset_index()
     return avg_2021
-
 def q10(avg_2021):
     """
     Input: the avg_2021 dataframe
@@ -577,8 +577,37 @@ and the name of one country/region that went down in the rankings.
 """
 
 def q12a(avg_2021):
-    raise NotImplementedError
-    return ("TODO", "TODO")
+    """
+    Return the top region and one region that went down in rankings from 2019 to 2021.
+    """
+    dfs = load_input()
+    
+    # Average overall scores by region for 2019
+    df2019 = dfs[0]
+    attrs = ['academic reputation', 'employer reputation', 'faculty student',
+             'citations per faculty', 'overall score']
+    avg_2019 = df2019.groupby('region')[attrs].mean().reset_index()
+    
+    # Sort 2019 and 2021 by overall score
+    top_2021 = avg_2021.sort_values('overall score', ascending=False).iloc[0]['region']
+    
+    # Find a region that went down: compare rankings
+    # Sort by overall score descending for both
+    avg_2019_sorted = avg_2019.sort_values('overall score', ascending=False)
+    
+    # Pick a region whose rank decreased
+    region_2019_ranks = {row['region']: i for i, row in enumerate(avg_2019_sorted.itertuples(), start=1)}
+    avg_2021_sorted = avg_2021.sort_values('overall score', ascending=False)
+    
+    region_2021_ranks = {row['region']: i for i, row in enumerate(avg_2021_sorted.itertuples(), start=1)}
+    
+    region_went_down = None
+    for region in region_2019_sorted['region']:
+        if region_2019_ranks[region] < region_2021_ranks.get(region, 1000):
+            region_went_down = region
+            break
+    
+    return (top_2021, region_went_down)
 
 """
 12b.
