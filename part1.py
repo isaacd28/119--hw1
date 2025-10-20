@@ -891,16 +891,21 @@ def q20a(dfs):
     # For your answer, return the score for Berkeley in the new column.
     df_2021 = dfs[2].copy()
     # Compute cheat score
-    df_2021['cheat_score'] = (df_2021['overall score'] * 0.5 +
-                              df_2021['academic reputation'] * 0.3 +
-                              df_2021['employer reputation'] * 0.2)
+    df_2021['cheat_score'] = (
+        df_2021['overall score'] * 0.5 +
+        df_2021['academic reputation'] * 0.3 +
+        df_2021['employer reputation'] * 0.2
+    )
     
-    # Boost UC Berkeley
-    df_2021.loc[df_2021['university'].str.lower() == 'uc berkeley', 'cheat_score'] += 50
+    # Normalize university names (strip spaces, lowercase) and boost UC Berkeley
+    mask = df_2021['university'].str.strip().str.lower() == 'uc berkeley'
+    df_2021.loc[mask, 'cheat_score'] += 50
 
-    # Get UC Berkeley's cheat score
-    berkeley_score = df_2021.loc[df_2021['university'].str.lower() == 'uc berkeley', 'cheat_score']
-    return float(berkeley_score.iloc[0]) if not berkeley_score.empty else 0
+    # Return Berkeley's cheat score
+    if mask.any():
+        return float(df_2021.loc[mask, 'cheat_score'].iloc[0])
+    else:
+        return 0  # in case UC Berkeley is not found
 
 
 def q20b(dfs):
